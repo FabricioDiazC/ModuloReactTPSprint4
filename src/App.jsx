@@ -2,10 +2,17 @@ import Aside from "./components/Aside";
 import ModalPokemon from "./components/ModalPokemon";
 import Pokemons from "./components/Pokemons";
 import usePokemonContext from "./hooks/usePokemonContext";
+import FavoritesModal from "./components/FavoritesModal";
 
 function App() {
-  const { showDetailPokemon, closePokemonDetail, pokemonDetail, isLoading } =
-    usePokemonContext();
+  const { 
+    showDetailPokemon,
+    closePokemonDetail, 
+    pokemonDetail, 
+    isLoading,
+    showFavoritesModal,
+    closeFavoritesModal, 
+  } = usePokemonContext();
 
   return (
     <section className="bg-[#F6F8FC] h-screen font-outfit overflow-y-auto bg-[url(/pokeball-icon.png)] bg-no-repeat bg-[-10%_-20%] overflow-x-hidden">
@@ -17,6 +24,7 @@ function App() {
           onCloseModal={closePokemonDetail}
           pokemon={pokemonDetail}
         />
+        <FavoritesModal show={showFavoritesModal} onClose={closeFavoritesModal} />
       </main>
     </section>
   );

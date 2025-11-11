@@ -1,22 +1,48 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { colorByType } from "../constants/pokemon";
+import usePokemonContext from "../hooks/usePokemonContext";
 
 const PokemonPreview = ({ pokemonURL, onClick }) => {
   const [pokemon, setPokemon] = useState(null);
+  const { favorites, toggleFavorite } = usePokemonContext();
+
+  const isFavorite = favorites.some((fav) => fav?.id === pokemon?.id);
 
   useEffect(() => {
-    axios
-      .get(pokemonURL)
-      .then(({ data }) => setPokemon(data))
-      .catch((err) => console.log(err));
+      // Si la URL es un objeto (porque viene de la lista de favoritos), lo usamos directamente.
+      if (typeof pokemonURL === 'object') {
+          setPokemon(pokemonURL.pokemonInfo);
+      } else {
+        axios
+          .get(pokemonURL)
+          .then(({ data }) => setPokemon(data))
+          .catch((err) => console.log(err));
+      }
   }, []);
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    toggleFavorite(pokemon);
+  };
 
   return (
     <article
       onClick={() => onClick(pokemon)}
       className="text-center bg-white rounded-[30px] relative font-semibold capitalize pb-4 shadow-lg shadow-slate-400/10 border-2 border-transparent hover:border-slate-200 cursor-pointer group grid gap-2"
     >
+      <button
+        onClick={handleFavoriteClick}
+        className="absolute top-2 right-3 text-2xl z-10"
+        title="Añadir a favoritos"
+      >
+        <i
+          className={`bi bi-star-fill ${
+            isFavorite ? "text-yellow-400" : "text-gray-300"
+          }`}
+        ></i>
+      </button>
+
       <header className="h-9">
         <img
           className="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-1/2 group-hover:scale-110 transition-transform pixelated"

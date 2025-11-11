@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useEffect } from "react";
 import PokemonList from "./PokemonList";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import usePokemonContext from "../hooks/usePokemonContext";
 
 const INITIAL_LIMIT = 40;
 const INCREASE_LIMIT = 20;
@@ -11,6 +12,8 @@ const Pokemons = () => {
   const [allPokemons, setAllPokemons] = useState([]);
   const [pokemonName, setPokemonName] = useState("");
   const [limit, setLimit] = useState(INITIAL_LIMIT);
+
+  const { openFavoritesModal, favorites } = usePokemonContext();
 
   const targetObserver = useRef(null);
   const entry = useIntersectionObserver(targetObserver, {});
@@ -56,9 +59,12 @@ const Pokemons = () => {
           />
           <button
             type="button"
-            className="bg-red-500 p-2 rounded-xl shadow-lg shadow-red-500/50 hover:bg-red-400 transition-colors"
+            onClick={openFavoritesModal}
+            className="bg-yellow-400 p-2 rounded-xl shadow-lg shadow-yellow-500/50 hover:bg-yellow-300 transition-colors"
+            title="Ver Favoritos"
           >
-            <i class="bi bi-search"></i>
+            <i className="bi bi-star-fill"></i>
+            <span className="ml-2 font-bold">{favorites.length}</span>
           </button>
         </div>
       </form>
